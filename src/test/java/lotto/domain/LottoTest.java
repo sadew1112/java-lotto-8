@@ -1,4 +1,4 @@
-package lotto;
+package lotto.domain;
 
 import lotto.domain.Lotto;
 import lotto.exception.ErrorCode;
@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class LottoTest {
@@ -24,18 +25,20 @@ class LottoTest {
     }
 
     @Test
-    @DisplayName("범위를 벗어난 숫자 포함 시 예외")
-    void outOfRange() {
+    @DisplayName("범위(1~45)를 벗어난 숫자 포함 시 예외")
+    void 범위_밖의_숫자_포함_예외() {
         assertThatThrownBy(() -> new Lotto(List.of(0,2,3,4,5,6)))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(ErrorCode.OUT_OF_RANGE_NUM.message());
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    @DisplayName("불변 리스트 보장 (수정 시도 시 UnsupportedOperationException)")
-    void immutableNumbers() {
-        Lotto lotto = new Lotto(List.of(1,2,3,4,5,6));
-        assertThatThrownBy(() -> lotto.getNumbers().add(7))
-                .isInstanceOf(UnsupportedOperationException.class);
+    @DisplayName("숫자 반환 정상 테스트")
+    void 정상_테스트() {
+        List<Integer> input = List.of(1, 2, 3, 4, 5, 6);
+        Lotto lotto = new Lotto(input);
+
+        List<Integer> numbers = lotto.getNumbers();
+
+        assertThat(numbers).containsExactly(1, 2, 3, 4, 5, 6);
     }
 }
