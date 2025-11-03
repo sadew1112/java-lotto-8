@@ -1,5 +1,7 @@
 package lotto;
 
+import lotto.domain.Lotto;
+import lotto.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,5 +23,19 @@ class LottoTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    // TODO: 추가 기능 구현에 따른 테스트 코드 작성
+    @Test
+    @DisplayName("범위를 벗어난 숫자 포함 시 예외")
+    void outOfRange() {
+        assertThatThrownBy(() -> new Lotto(List.of(0,2,3,4,5,6)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(ErrorCode.OUT_OF_RANGE_NUM.message());
+    }
+
+    @Test
+    @DisplayName("불변 리스트 보장 (수정 시도 시 UnsupportedOperationException)")
+    void immutableNumbers() {
+        Lotto lotto = new Lotto(List.of(1,2,3,4,5,6));
+        assertThatThrownBy(() -> lotto.getNumbers().add(7))
+                .isInstanceOf(UnsupportedOperationException.class);
+    }
 }
